@@ -1,3 +1,5 @@
+let vsBot;
+
 //This is the main module for controlling the game board and other related elements - probably could be highly optimised
 const gameBoard = (() => {
     //variables assigned on initial creation
@@ -53,9 +55,27 @@ const gameBoard = (() => {
             if (NextName == '') {
                 NextName = 'Player Two';
             }
+            if (vsBot) { //if Bot mode is on, we do this instead
+                //finish players choice
+                places[index] = letter;
+                updateBoard();
+                checkWin(ActiveName);
+                //make the bots choice
+                if (play != false) {
+                    firstTurn = true;
+                    letter = playerTwo.privateLetter();
+                    ActiveName = playerTwo.privateName();
+                    NextName = playerOne.privateName();
+                    status.textContent = `${NextName}'s turn`;
+                    places[botChoice()] = letter;
+                    updateBoard();
+                    checkWin(ActiveName);
+                    return;
+                }
+            }
         } else {
             firstTurn = true;
-            letter = playerTwo.privateLetter()
+            letter = playerTwo.privateLetter();
             ActiveName = playerTwo.privateName();
             NextName = playerOne.privateName();
             if (NextName == '') {
@@ -65,13 +85,13 @@ const gameBoard = (() => {
                 ActiveName = 'Player Two';
             }
         }
-
         //after we have recorded the player's choice, update our game board and check if anyone has won
         status.textContent = `${NextName}'s turn`;
         places[index] = letter;
         updateBoard();
         checkWin(ActiveName);
     }
+
     //when the squares are clicked, call the above function on the square
     for (let i = 0; i < tiles.length; i++) {
         tiles[i].addEventListener("click", () => {
@@ -92,7 +112,6 @@ const gameBoard = (() => {
                 reset.style.display = 'block';
                 reset.addEventListener("click", playAgain);
                 return;
-
             }
         }
         //if nobody has won and there are no empty squares left, it is a draw
@@ -105,6 +124,20 @@ const gameBoard = (() => {
         }
     }
 
+    //Make a random choice (for the AI mode)
+    const botChoice = () => {
+        //get empty squares
+        let possibleMoves = [];
+        for (let a = 0; a < places.length; a++) {
+            if (places[a] == null) {
+                possibleMoves.push(a);
+            }
+        }
+        //choose one at random
+        let chosen = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+        return chosen;
+    }
+
     //reset the game
     const playAgain = () => {
         for (let p = 0; p < places.length; p++) {
@@ -112,9 +145,14 @@ const gameBoard = (() => {
         }
         play = true;
         firstTurn = true;
+        playerTwo = Player(nameTwo.placeholder, 'O');
         updateBoard();
         status.textContent = 'Waiting for game to begin';
+        reset.style.display = 'none';
     }
+    return {
+        playAgain
+    };
 })();
 
 //factory function for players
@@ -128,7 +166,7 @@ const Player = (name, letter) => {
     return {
         privateName,
         privateLetter
-    }
+    };
 };
 
 //initial players
@@ -149,22 +187,30 @@ nameTwo.addEventListener("change", () => {
 //this module controls the colour scheme and allows for switching to AI mode - work in progress
 const DisplayController = (() => {
     //change colour scheme when button is clicked
-    let vsBot = false;
+    vsBot = false;
     const checkMode = (r) => {
-        if (r == undefined) {
-            return
-        }; //when it is first called
-        alert('work in progress');
-        return;
+        if (r == undefined) { //when it is first called
+            return;
+        };
         const rs = getComputedStyle(r);
         const holdValue = rs.getPropertyValue('--main-colour');
         r.style.setProperty('--main-colour', rs.getPropertyValue('--side-colour'));
         r.style.setProperty('--side-colour', holdValue);
         vsBot ? (vsBot = false, toggle.innerHTML = 'Play vs Bot') : (vsBot = true, toggle.innerHTML = 'Play vs Player');
         console.log(vsBot);
+        if (nameTwo.placeholder != 'Bot') {
+            nameTwo.value = '';
+            nameTwo.placeholder = 'Bot';
+        } else {
+            nameTwo.placeholder = 'Player 2';
+        }
+        gameBoard.playAgain();
+        //return { //I couldn't figure out how to update this variable whenever it was changed, so I had to make it global.
+        //vsBot
+        //};
     };
     return {
-        checkMode
+        checkMode,
     };
 })();
 

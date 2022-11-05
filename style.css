@@ -54,7 +54,7 @@ html, body {
 }
 
 #playerScores input {
-    color: var(--main-colour);
+    color: var(--side-colour);
     border: 1px solid var(--main-colour);
     width: 10vw;
     padding: 8px;
