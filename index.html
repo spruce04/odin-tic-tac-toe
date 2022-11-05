@@ -13,26 +13,28 @@
     <div id="main">
         <div id="playerScores">
             <div id="playerOne">
-                <span id="nameOne" class="name">Player One:</span>
-                <span id="scoreOne" class="score">3</span>
+                <input placeholder="Player One Name" id="nameOne" class="name" maxlength="12"></span>
             </div>
             <button id="toggleMode">Play VS <span id="opponent">Bot</span></button>
             <div id="playerTwo">
-                <span id="nameTwo" class="name">Player Two:</span>
-                <span id="scoreTwo" class="score">2</span>
+                <input placeholder="Player Two Name" id="nameTwo" class="name" maxlength="12"></span>
             </div>
         </div>
         <div class="boardPos">
+        <div class="wrap">
+            <div id="status"></div>
+            <button id="reset">Play Again</button>
+        </div>
         <div id="gameBoard">
-            <div id="0" class="square">a</div>
-            <div id="1" class="square">b</div>
-            <div id="2" class="square">c</div>
-            <div id="3" class="square">d</div>
-            <div id="4" class="square">e</div>
-            <div id="5" class="square">f</div>
-            <div id="6" class="square">g</div>
-            <div id="7" class="square">h</div>
-            <div id="8" class="square">i</div>
+            <div id="0" class="square"></div>
+            <div id="1" class="square"></div>
+            <div id="2" class="square"></div>
+            <div id="3" class="square"></div>
+            <div id="4" class="square"></div>
+            <div id="5" class="square"></div>
+            <div id="6" class="square"></div>
+            <div id="7" class="square"></div>
+            <div id="8" class="square"></div>
         </div>
         </div>
     </div>

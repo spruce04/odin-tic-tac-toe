@@ -49,8 +49,54 @@ html, body {
     cursor: pointer;
 }
 
+::placeholder {
+    color: var(--side-colour);
+}
+
+#playerScores input {
+    color: var(--main-colour);
+    border: 1px solid var(--main-colour);
+    width: 10vw;
+    padding: 8px;
+    text-align: center;
+    font-size: 1rem;
+    border: 1px solid var(--side-colour);
+    box-shadow: 0 0 3px var(--main-colour);
+}
+
+input:focus{
+    outline: none;
+}
+
+#reset {
+    display: none;
+    margin-left: 1vw;
+    background-color: var(--side-colour);
+    color: var(--main-colour);
+    border: 1px solid black;
+    border-radius: 4px;
+}
+
+#reset:hover {
+    cursor: pointer;
+    background-color: var(--main-colour);
+    color: var(--side-colour);
+}
+
+#playerOne, #playerTwo {
+    display: flex;
+    align-items: center;
+}
+
+.wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .boardPos {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -71,6 +117,11 @@ html, body {
     background-color: var(--side-colour);
     color: var(--main-colour);
     border-radius: 4px;
+    font-size: 6rem;
+}
+
+#gameBoard .square:hover {
+    cursor: pointer;
 }
 
 #footer {
@@ -86,9 +137,10 @@ html, body {
     max-height: 7vh;
 }
 
-
-/* Mobile Formatting - will do later */
 @media screen and (max-width: 475px) {
+    input {
+        width: 300px;
+    }
    #toggleMode {
     flex-basis: 100%;
     max-width: 70vw;
