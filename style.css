@@ -6,7 +6,7 @@ html, body {
     width: 100vw;
     display: flex;
     flex-direction: column;
-    font-family: 'Courier New';
+    font-family: "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
 }
 
 :root {
@@ -33,7 +33,7 @@ html, body {
     align-items: center;
 }
 
-#playerScores button {
+#playerScores #toggleMode {
     padding: 12px;
     border: 1px solid black;
     background-color: var(--side-colour);
@@ -43,7 +43,7 @@ html, body {
     font-family: Roboto,"Helvetica Neue",Ubuntu,sans-serif;
 }
 
-#playerScores button:hover {
+#playerScores #toggleMode:hover {
     background-color: var(--main-colour);
     color: var(--side-colour);
     cursor: pointer;
@@ -102,6 +102,7 @@ input:focus{
 }
 
 #gameBoard {
+    font-family: 'Courier New', Courier, monospace;
     margin-top: 5vh;
     height: 55vh;
     width: 55vh;
@@ -143,6 +144,6 @@ input:focus{
     }
    #toggleMode {
     flex-basis: 100%;
-    max-width: 70vw;
+    max-width: 80vw;
    } 
 }

@@ -90,9 +90,7 @@ const gameBoard = (() => {
                 status.textContent = `${ActiveName} wins!`;
                 play = false;
                 reset.style.display = 'block';
-                reset.addEventListener("click", () => {
-                    location.reload();
-                })
+                reset.addEventListener("click", playAgain);
                 return;
 
             }
@@ -102,11 +100,20 @@ const gameBoard = (() => {
             status.textContent = `It's a draw!`;
             play = false;
             reset.style.display = 'block';
-            reset.addEventListener("click", () => {
-                location.reload();
-            })
+            reset.addEventListener("click", playAgain);
             return;
         }
+    }
+
+    //reset the game
+    const playAgain = () => {
+        for (let p = 0; p < places.length; p++) {
+            places[p] = undefined;
+        }
+        play = true;
+        firstTurn = true;
+        updateBoard();
+        status.textContent = 'Waiting for game to begin';
     }
 })();
 
