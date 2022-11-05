@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+
 html, body {
     margin: 0;
     padding: 0;
@@ -6,12 +8,16 @@ html, body {
     width: 100vw;
     display: flex;
     flex-direction: column;
-    font-family: "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+    font-family: 'Space Mono', monospace;
 }
 
 :root {
     --main-colour: #2E21AC;
     --side-colour: #D8499D;
+}
+
+button, input {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 #header {
@@ -40,7 +46,6 @@ html, body {
     color: var(--main-colour);
     border-radius: 4px;
     font-size: 1.25rem;
-    font-family: Roboto,"Helvetica Neue",Ubuntu,sans-serif;
 }
 
 #playerScores #toggleMode:hover {
@@ -102,7 +107,7 @@ input:focus{
 }
 
 #gameBoard {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: Arial;
     margin-top: 5vh;
     height: 55vh;
     width: 55vh;
