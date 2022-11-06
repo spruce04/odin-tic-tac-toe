@@ -152,3 +152,13 @@ input:focus{
     max-width: 80vw;
    } 
 }
+
+#difficulty {
+    border: 1px solid var(--side-colour);
+    background-color: white;
+    color: var(--main-colour);
+    outline: none;
+    padding: 12px;
+    margin-left: 1vw;
+    font-size: 1rem;
+}
