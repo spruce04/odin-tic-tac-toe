@@ -1,17 +1,25 @@
 let vsBot;
 
-//This is the main module for controlling the game board and other related elements - probably could be highly optimised
-const gameBoard = (() => {
-	//variables assigned on initial creation
-	const status = document.getElementById('status');
-	status.textContent = 'Waiting for game to begin';
-	let play = true;
-	let firstTurn = true;
-	const reset = document.getElementById('reset');
-	const tiles = document.getElementsByClassName("square");
-
+//This is the main class for controlling the game board and other related elements - probably could be highly optimised
+class GameBoard {
+	constructor() {
+		//variables assigned on initial creation
+		this.status = document.getElementById('status');
+		this.status.textContent = 'Waiting for game to begin';
+		this.play = true;
+		this.firstTurn = true;
+		this.reset = document.getElementById('reset');
+		this.tiles = document.getElementsByClassName("square");
+		//when the squares are clicked, call the above function on the square
+		for (let i = 0; i < this.tiles.length; i++) {
+			this.tiles[i].addEventListener("click", () => {
+				this.recordMove(i);
+			});
+		}
+	}
+	
 	//This array contains arrays of indexes which would result in a player having won the game
-	const winCons = [
+	winCons = [
 		[0, 1, 2],
 		[0, 4, 8],
 		[0, 3, 6],
@@ -22,184 +30,199 @@ const gameBoard = (() => {
 		[6, 7, 8]
 	];
 	//This is the array where we will store choices and update the game board
-	let places = Array.apply(null, Array(9));
+	places = Array.apply(null, Array(9));
 
 	//This function updates our game board based on values in 'places' array
-	const updateBoard = () => {
-		for (let i = 0; i < tiles.length; i++) {
-			tiles[i].textContent = places[i];
+	updateBoard = () => {
+		for (let i = 0; i < this.tiles.length; i++) {
+			this.tiles[i].textContent = this.places[i];
 		}
 	}
 
 	//This function records the move of a player when they click on a square
-	const recordMove = (index) => {
-		if (places[index] != null) {
+	recordMove = (index) => {
+		if (this.places[index] != null) {
 			return;
 		}
-		if (play == false) {
+		if (this.play == false) {
 			return;
 		}
-		let letter;
-		let ActiveName;
-		let NextName;
+		this.letter;
+		this.ActiveName;
+		this.NextName;
 
 		//we want to do different things depending on whose turn it is
-		if (firstTurn) {
-			firstTurn = false;
-			letter = playerOne.privateLetter();
-			ActiveName = playerOne.privateName();
-			NextName = playerTwo.privateName();
-			if (ActiveName == '') {
-				ActiveName = 'Player One';
+		if (this.firstTurn) {
+			this.firstTurn = false;
+			this.letter = playerOne.letter;
+			this.ActiveName = playerOne.name;
+			this.NextName = playerTwo.name;
+			if (this.ActiveName == '') {
+				this.ActiveName = 'Player One';
 			}
-			if (NextName == '') {
-				NextName = 'Player Two';
+			if (this.NextName == '') {
+				this.NextName = 'Player Two';
 			}
 			if (vsBot) { //if Bot mode is on, we do this instead
 				//finish players choice
-				places[index] = letter;
-				updateBoard();
-				checkWin(ActiveName);
+				this.places[index] = this.letter;
+				this.updateBoard();
+				this.checkWin(this.ActiveName);
 				//make the bots choice
-				if (play != false) {
-					firstTurn = true;
-					letter = playerTwo.privateLetter();
-					ActiveName = playerTwo.privateName();
-					NextName = playerOne.privateName();
-					status.textContent = `${NextName}'s turn`;
-					places[botChoice()] = letter;
-					updateBoard();
-					checkWin(ActiveName);
+				if (this.play != false) {
+					this.firstTurn = true;
+					this.letter = playerTwo.letter;
+					this.ActiveName = playerTwo.name;
+					this.NextName = playerOne.name;
+					this.status.textContent = `${this.NextName}'s turn`;
+					this.places[this.botChoice()] = this.letter;
+					this.updateBoard();
+					this.checkWin(this.ActiveName);
 					return;
 				}
 			}
 		} else {
-			firstTurn = true;
-			letter = playerTwo.privateLetter();
-			ActiveName = playerTwo.privateName();
-			NextName = playerOne.privateName();
-			if (NextName == '') {
-				NextName = 'Player One';
+			this.firstTurn = true;
+			this.letter = playerTwo.letter;
+			this.ActiveName = playerTwo.name;
+			this.NextName = playerOne.name;
+			if (this.NextName == '') {
+				this.NextName = 'Player One';
 			}
-			if (ActiveName == '') {
-				ActiveName = 'Player Two';
+			if (this.ActiveName == '') {
+				this.ActiveName = 'Player Two';
 			}
 		}
 		//after we have recorded the player's choice, update our game board and check if anyone has won
-		status.textContent = `${NextName}'s turn`;
-		places[index] = letter;
-		updateBoard();
-		checkWin(ActiveName);
+		this.status.textContent = `${this.NextName}'s turn`;
+		this.places[index] = this.letter;
+		this.updateBoard();
+		this.checkWin(this.ActiveName);
+		this.addListeners()
 	}
 
-	//when the squares are clicked, call the above function on the square
-	for (let i = 0; i < tiles.length; i++) {
-		tiles[i].addEventListener("click", () => {
-			recordMove(i);
-		});
+	addListeners() {
+		//when the squares are clicked, call the above function on the square
+		for (let i = 0; i < this.tiles.length; i++) {
+			this.tiles[i].addEventListener("click", () => {
+				this.recordMove(i);
+			});
+		}
 	}
 
 	//this function checks if a player has won the game
-	const checkWin = (ActiveName) => {
-		for (let l = 0; l < winCons.length; l++) {
-			const valueOne = winCons[l][0];
-			const valueTwo = winCons[l][1];
-			const valueThree = winCons[l][2];
+	checkWin = (ActiveName) => {
+		for (let l = 0; l < this.winCons.length; l++) {
+			this.valueOne = this.winCons[l][0];
+			this.valueTwo = this.winCons[l][1];
+			this.valueThree = this.winCons[l][2];
 			//Check if our values in 'places' match anything in the winCons array
-			if (places[valueOne] == places[valueTwo] && places[valueTwo] == places[valueThree] && places[valueOne] != undefined) {
-				status.textContent = `${ActiveName} wins!`;
-				play = false;
-				reset.style.display = 'block';
-				reset.addEventListener("click", playAgain);
+			if (this.places[this.valueOne] == this.places[this.valueTwo] && this.places[this.valueTwo] == this.places[this.valueThree] && this.places[this.valueOne] != undefined) {
+				this.status.textContent = `${ActiveName} wins!`;
+				this.play = false;
+				this.reset.style.display = 'block';
+				this.reset.addEventListener("click", this.playAgain);
 				return;
 			}
 		}
 		//if nobody has won and there are no empty squares left, it is a draw
-		if (places.includes(undefined) == false) {
-			status.textContent = `It's a draw!`;
-			play = false;
-			reset.style.display = 'block';
-			reset.addEventListener("click", playAgain);
+		if (this.places.includes(undefined) == false) {
+			this.status.textContent = `It's a draw!`;
+			this.play = false;
+			this.reset.style.display = 'block';
+			this.reset.addEventListener("click", this.playAgain);
 			return;
 		}
 	}
 
 	//Make a random choice (for the AI mode)
-	const botChoice = () => {
+	botChoice = () => {
 		//get empty squares
-		let possibleMoves = [];
-		for (let a = 0; a < places.length; a++) {
-			if (places[a] == null) {
-				possibleMoves.push(a);
+		this.possibleMoves = [];
+		for (let a = 0; a < this.places.length; a++) {
+			if (this.places[a] == null) {
+				this.possibleMoves.push(a);
 			}
 		}
 		//choose one at random
-		let chosen = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
-		return chosen;
+		this.chosen = this.possibleMoves[Math.floor(Math.random() * this.possibleMoves.length)];
+		return this.chosen;
 	}
 
 	//reset the game
-	const playAgain = () => {
-		for (let p = 0; p < places.length; p++) {
-			places[p] = undefined;
+	playAgain = () => {
+		for (let p = 0; p < this.places.length; p++) {
+			this.places[p] = undefined;
 		}
-		play = true;
-		firstTurn = true;
+		this.play = true;
+		this.firstTurn = true;
 		if (nameTwo.placeholder == 'Bot') {
-			playerTwo = Player(nameTwo.placeholder, 'O');
+			playerTwo.name = nameTwo.placeholder;
 		} else {
-			playerTwo = Player(nameTwo.value, 'O');
+			playerTwo.name = nameTwo.value;
 		}
-		updateBoard();
-		status.textContent = 'Waiting for game to begin';
-		reset.style.display = 'none';
+		this.updateBoard();
+		this.status.textContent = 'Waiting for game to begin';
+		this.reset.style.display = 'none';
 	}
-	return {
-		playAgain
-	};
-})();
-
-//factory function for players
-const Player = (name, letter) => {
-	const privateName = () => {
-		return name;
-	}
-	const privateLetter = () => {
-		return letter;
-	}
-	return {
-		privateName,
-		privateLetter
-	};
 };
 
+const gameBoard = new GameBoard;
+
+//class template for players
+class Player {
+	constructor(name, letter) {
+		this.name = name;
+		this.letter = letter;
+	}
+
+	get name() {
+		return this._name;
+	}
+
+	set name(value) {
+		this._name = value;
+	}
+
+	get letter() {
+		return this._letter;
+	}
+
+	set letter(value) {
+		this._letter = value;
+	}
+}
+
 //initial players
-let playerOne = Player('Player One', 'X');
-let playerTwo = Player('Player Two', 'O');
+let playerOne = new Player('Player One', 'X');
+let playerTwo = new Player('Player Two', 'O');
 
 //we will get our player names from here
 const nameOne = document.getElementById('nameOne');
 const nameTwo = document.getElementById('nameTwo');
 //when there is a change to the player name input, change the player's name in the program
 nameOne.addEventListener("change", () => {
-	playerOne = Player(nameOne.value, 'X');
+	playerOne.name = nameOne.value;
 })
 nameTwo.addEventListener("change", () => {
-	playerTwo = Player(nameTwo.value, 'O');
+	playerTwo.name = nameTwo.value;
 })
 
 //this module controls the colour scheme and allows for switching to AI mode
-const DisplayController = (() => {
+class DisplayController {
 	//change colour scheme when button is clicked
-	vsBot = false;
-	const checkMode = (r) => {
+	constructor() {
+		vsBot = false;
+	}
+	
+	checkMode = (r) => {
 		if (r == undefined) { //when it is first called
 			return;
 		};
-		const rs = getComputedStyle(r);
-		const holdValue = rs.getPropertyValue('--main-colour');
-		r.style.setProperty('--main-colour', rs.getPropertyValue('--side-colour'));
-		r.style.setProperty('--side-colour', holdValue);
+		this.rs = getComputedStyle(r);
+		this.holdValue = this.rs.getPropertyValue('--main-colour');
+		r.style.setProperty('--main-colour', this.rs.getPropertyValue('--side-colour'));
+		r.style.setProperty('--side-colour', this.holdValue);
 		vsBot ? (vsBot = false, toggle.innerHTML = 'Play vs Bot') : (vsBot = true, toggle.innerHTML = 'Play vs Player');
 		console.log(vsBot);
 		gameBoard.playAgain();
@@ -214,14 +237,12 @@ const DisplayController = (() => {
 		//vsBot
 		//};
 	};
-	return {
-		checkMode,
-	};
-})();
+};
+const displayController = new DisplayController;
 
 //when someone changes to AI mode, change the colour scheme
 const toggle = document.getElementById("toggleMode");
 toggle.addEventListener("click", () => {
 	const r = document.querySelector(":root");
-	DisplayController.checkMode(r);
+	displayController.checkMode(r);
 });
