@@ -191,7 +191,6 @@ nameTwo.addEventListener("change", () => {
 //this module controls the colour scheme and allows for switching to AI mode
 const DisplayController = (() => {
 	//change colour scheme when button is clicked
-	const dropdown = '<select id="difficulty" name="difficulty"><option value="easy">Easy</option><option value="hard">Hard</option></select>';
 	vsBot = false;
 	const checkMode = (r) => {
 		if (r == undefined) { //when it is first called
@@ -204,12 +203,11 @@ const DisplayController = (() => {
 		vsBot ? (vsBot = false, toggle.innerHTML = 'Play vs Bot') : (vsBot = true, toggle.innerHTML = 'Play vs Player');
 		console.log(vsBot);
 		gameBoard.playAgain();
-		const holdingDiv = document.getElementById("playerTwo");
-		if (vsBot) {
-			holdingDiv.innerHTML = '<label for="difficulty">Choose your difficulty:</label>' + dropdown; 
-		}
-		else {
-			holdingDiv.innerHTML = '<input placeholder="Player Two Name" id="nameTwo" class="name" maxlength="12">';
+		if (nameTwo.placeholder != 'Bot') {
+			nameTwo.value = '';
+			nameTwo.placeholder = 'Bot';
+		} else {
+			nameTwo.placeholder = 'Player Two Name';
 		}
 		gameBoard.playAgain();
 		//return { //I couldn't figure out how to update this variable whenever it was changed, so I had to make it global.
